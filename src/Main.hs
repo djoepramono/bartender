@@ -1,23 +1,31 @@
 module Main where
 
-data Input = Drink | Pay
-data Error
-data ParsedInput = Either Error Input
+import Prelude hiding (Right, Left)
+
+data Request = Drink | Pay
+data Unknown
+data ParsedInput = Left Unknown | Right Request
 
 main :: IO ()
 main = do
   putStrLn "Bartender: How can I help you?"
   putStr "You: "
   input <- getLine 
-  parseCommand (input)
+  let request = parseCommand (input)
+  respond request
 
-parseInput :: String -> Either Error Input -- Not sure why I can't use ParsedInput
-parseInput "drink" = Right Drink
-parseInput "pay" = Right Pay
+parseRequest :: String -> ParsedInput -- Not sure why I can't use ParsedInput
+parseRequest "drink" = Right Drink
+parseRequest "pay" = Right Pay
 
-parseCommand :: String -> IO ()
+parseCommand :: String -> Request 
 parseCommand command = do
   case command of
-    "drink" -> putStrLn "Bartender: Here you go"
-    "pay" -> putStrLn "Bartender: Thanks"
-    _ -> putStrLn "Bartender: I don't get you"
+    "drink" -> Right Drink  
+    "pay" -> Right Pay  
+    _ -> Left Error 
+
+respond :: ParsedInput -> IO ()
+respond (Right Drink) = putStrLn "Bartender: Here you go"
+respond (Right Pay) = putStrLn "Bartender: Thanks"
+respond (Left Unknown) = putStrln "Bartender: I don't get you"
