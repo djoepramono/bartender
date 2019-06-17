@@ -1,10 +1,16 @@
 module Main where
 
-import Prelude hiding (Right, Left)
+--import Prelude hiding (Right, Left)
+import Data.Either
 
-data Request = Drink | Pay
-data Unknown
-data ParsedInput = Left Unknown | Right Request
+-- type alias
+type Drink = String
+type Pay = String
+type Unknown = String
+
+data Request = Drink | Pay 
+-- data Unknown
+data ParsedInput = Either Unknown Request
 
 main :: IO ()
 main = do
@@ -17,15 +23,16 @@ main = do
 parseRequest :: String -> ParsedInput -- Not sure why I can't use ParsedInput
 parseRequest "drink" = Right Drink
 parseRequest "pay" = Right Pay
+parseRequest _ = Left Unknown
 
 parseCommand :: String -> Request 
 parseCommand command = do
   case command of
     "drink" -> Right Drink  
     "pay" -> Right Pay  
-    _ -> Left Error 
+    _ -> Left Unknown
 
-respond :: ParsedInput -> IO ()
-respond (Right Drink) = putStrLn "Bartender: Here you go"
-respond (Right Pay) = putStrLn "Bartender: Thanks"
-respond (Left Unknown) = putStrln "Bartender: I don't get you"
+respond :: ParsedInput -> String 
+respond Right Drink  = "Bartender: Here you go"
+respond Right Pay  = "Bartender: Thanks"
+respond Left unknown = "Bartender: I don't get you"
