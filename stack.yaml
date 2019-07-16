@@ -1,7 +1,7 @@
 resolver: lts-13.22
 
-#ghc-options:
-#  bartender: -fwarn-incomplete-patterns
+ghc-options:
+  bartender: -fwarn-incomplete-patterns -XDeriveAnyClass
 
 packages:
 - .
